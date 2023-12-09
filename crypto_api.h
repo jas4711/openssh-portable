@@ -23,6 +23,10 @@ typedef int32_t crypto_int32;
 typedef uint32_t crypto_uint32;
 typedef int64_t crypto_int64;
 typedef uint64_t crypto_uint64;
+typedef int8_t crypto_uint8_signed;
+typedef int16_t crypto_uint16_signed;
+typedef int32_t crypto_uint32_signed;
+typedef int64_t crypto_uint64_signed;
 
 #define randombytes(buf, buf_len) arc4random_buf((buf), (buf_len))
 #define small_random32() arc4random()
@@ -57,5 +61,24 @@ int	crypto_kem_sntrup761_keypair(unsigned char *pk, unsigned char *sk);
 #define crypto_kem_mlkem768_SECRETKEYBYTES 2400
 #define crypto_kem_mlkem768_CIPHERTEXTBYTES 1088
 #define crypto_kem_mlkem768_BYTES 32
+
+int	crypto_kem_mceliece6688128f_enc(unsigned char *c,
+    unsigned char *key, const unsigned char *pk);
+int	crypto_kem_mceliece6688128f_dec(unsigned char *key,
+    const unsigned char *c, const unsigned char *sk);
+void	crypto_kem_mceliece6688128f_keypair(unsigned char *pk,
+    unsigned char *sk);
+
+#define crypto_kem_mceliece6688128_PUBLICKEYBYTES 1044992
+#define crypto_kem_mceliece6688128_SECRETKEYBYTES 13932
+#define crypto_kem_mceliece6688128_CIPHERTEXTBYTES 208
+#define crypto_kem_mceliece6688128_BYTES 32
+
+#if USE_MCELIECE6688128X25519 && USE_LIBMCELIECE
+# include "mceliece.h"
+# define crypto_kem_mceliece6688128f_enc mceliece6688128f_enc
+# define crypto_kem_mceliece6688128f_dec mceliece6688128f_dec
+# define crypto_kem_mceliece6688128f_keypair mceliece6688128f_keypair
+#endif
 
 #endif /* crypto_api_h */
