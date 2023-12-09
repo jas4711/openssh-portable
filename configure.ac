@@ -1752,6 +1752,30 @@ AC_ARG_WITH([libedit],
 	fi ]
 )
 
+# Check whether user wants libmceliece support
+LIBMCELIECE_MSG="no"
+AC_ARG_WITH([libmceliece],
+	[  --with-libmceliece[[=PATH]]   Enable libmceliece support.],
+        [],
+        [with_libmceliece=yes])
+if test "x$with_libmceliece" != "xno" ; then
+	if test "x$with_libmceliece" != "xyes" ; then
+		CPPFLAGS="$CPPFLAGS -I${with_libmceliece}/include"
+		if test -n "${rpath_opt}"; then
+			LDFLAGS="-L${with_libmceliece}/lib ${rpath_opt}${with_libmceliece}/lib ${LDFLAGS}"
+		else
+			LDFLAGS="-L${with_libmceliece}/lib ${LDFLAGS}"
+		fi
+	fi
+	AC_CHECK_LIB([mceliece], [mceliece_kem_6688128_keypair],
+		[ AC_DEFINE([USE_LIBMCELIECE], [1], [Use libmceliece])
+		  LIBMCELIECE_MSG="yes"
+		  LIBMCELIECE="-lmceliece"
+		  AC_SUBST([LIBMCELIECE])
+		]
+	)
+fi
+
 AUDIT_MODULE=none
 AC_ARG_WITH([audit],
 	[  --with-audit=module     Enable audit support (modules=debug,bsm,linux)],
@@ -5620,6 +5644,7 @@ echo "              Random number source: $RAND_MSG"
 echo "             Privsep sandbox style: $SANDBOX_STYLE"
 echo "                   PKCS#11 support: $enable_pkcs11"
 echo "                  U2F/FIDO support: $enable_sk"
+echo "               libmceliece support: $LIBMCELIECE_MSG"
 
 echo ""
 
@@ -5637,6 +5662,9 @@ echo "        +for FIDO2: ${LIBFIDO2}"
 fi
 if test ! -z "${SSHDLIBS}"; then
 echo "         +for sshd: ${SSHDLIBS}"
+fi
+if test ! -z "${LIBMCELIECE}"; then
+echo "     +for mceliece: ${LIBMCELIECE}"
 fi
 
 echo ""

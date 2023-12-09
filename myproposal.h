@@ -28,6 +28,7 @@
 	"sntrup761x25519-sha512@openssh.com," \
 	"curve25519-sha256," \
 	"curve25519-sha256@libssh.org," \
+	"mceliece6688128x25519-sha512@openssh.com," \
 	"ecdh-sha2-nistp256," \
 	"ecdh-sha2-nistp384," \
 	"ecdh-sha2-nistp521," \
