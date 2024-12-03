@@ -142,6 +142,8 @@ else
 	AC_MSG_RESULT([no])
 fi
 
+AC_DEFINE_UNQUOTED([WITH_SPHINCSPLUS], [1], [enable SPHINCS+])
+
 use_stack_protector=1
 use_toolchain_hardening=1
 use_retpoline=1

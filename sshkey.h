@@ -73,6 +73,8 @@ enum sshkey_types {
 	KEY_ECDSA_SK_CERT,
 	KEY_ED25519_SK,
 	KEY_ED25519_SK_CERT,
+	KEY_SPHINCSPLUS,
+	KEY_SPHINCSPLUS_CERT,
 	KEY_UNSPEC
 };
 
@@ -142,6 +144,9 @@ struct sshkey {
 	void	*xmss_state;	/* depends on xmss_name, opaque */
 	u_char	*xmss_sk;
 	u_char	*xmss_pk;
+	/* KEY_SPHINCSPLUS */
+	u_char *sphincsplus_sk;
+	u_char *sphincsplus_pk;
 	/* KEY_ECDSA_SK and KEY_ED25519_SK */
 	char	*sk_application;
 	uint8_t	sk_flags;
@@ -158,6 +163,9 @@ struct sshkey {
 
 #define	ED25519_SK_SZ	crypto_sign_ed25519_SECRETKEYBYTES
 #define	ED25519_PK_SZ	crypto_sign_ed25519_PUBLICKEYBYTES
+
+#define	SPHINCSPLUS_SK_SZ	crypto_sign_sphincsplus_SECRETKEYBYTES
+#define	SPHINCSPLUS_PK_SZ	crypto_sign_sphincsplus_PUBLICKEYBYTES
 
 /* Additional fields contained in signature */
 struct sshkey_sig_details {

@@ -42,6 +42,16 @@ int	crypto_sign_ed25519_open(unsigned char *, unsigned long long *,
     const unsigned char *, unsigned long long, const unsigned char *);
 int	crypto_sign_ed25519_keypair(unsigned char *, unsigned char *);
 
+#define crypto_sign_sphincsplus_SECRETKEYBYTES 128U
+#define crypto_sign_sphincsplus_PUBLICKEYBYTES 64U
+#define crypto_sign_sphincsplus_BYTES 29792U
+
+int	crypto_sign_sphincsplus(unsigned char *, unsigned long long *,
+    const unsigned char *, unsigned long long, const unsigned char *);
+int	crypto_sign_sphincsplus_open(unsigned char *, unsigned long long *,
+    const unsigned char *, unsigned long long, const unsigned char *);
+int	crypto_sign_sphincsplus_keypair(unsigned char *, unsigned char *);
+
 #define crypto_kem_sntrup761_PUBLICKEYBYTES 1158
 #define crypto_kem_sntrup761_SECRETKEYBYTES 1763
 #define crypto_kem_sntrup761_CIPHERTEXTBYTES 1039

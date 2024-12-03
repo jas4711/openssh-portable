@@ -294,6 +294,10 @@ ask_filename(struct passwd *pw, const char *prompt)
 		case KEY_XMSS_CERT:
 			name = _PATH_SSH_CLIENT_ID_XMSS;
 			break;
+		case KEY_SPHINCSPLUS:
+		case KEY_SPHINCSPLUS_CERT:
+		  name = _PATH_SSH_CLIENT_ID_SPHINCSPLUS;
+		  break;
 		default:
 			fatal("bad key type");
 		}
@@ -1099,6 +1103,9 @@ do_gen_all_hostkeys(struct passwd *pw)
 #ifdef WITH_XMSS
 		{ "xmss", "XMSS",_PATH_HOST_XMSS_KEY_FILE },
 #endif /* WITH_XMSS */
+#ifdef WITH_SPHINCSPLUS
+		{ "sphincsplus", "SPHINCSPLUS",_PATH_HOST_SPHINCSPLUS_KEY_FILE },
+#endif /* WITH_SPHINCSPLUS */
 		{ NULL, NULL, NULL }
 	};
 
@@ -1593,6 +1600,7 @@ do_change_comment(struct passwd *pw, const char *identity_comment)
 	}
 
 	if (private->type != KEY_ED25519 && private->type != KEY_XMSS &&
+	    private->type != KEY_SPHINCSPLUS &&
 	    private_key_format != SSHKEY_PRIVATE_OPENSSH) {
 		error("Comments are only supported for keys stored in "
 		    "the new format (-o).");
@@ -3818,6 +3826,9 @@ main(int argc, char **argv)
 			    print_generic, opts, nopts);
 			n += do_print_resource_record(pw,
 			    _PATH_HOST_XMSS_KEY_FILE, rr_hostname,
+			    print_generic, opts, nopts);
+			n += do_print_resource_record(pw,
+			    _PATH_HOST_SPHINCSPLUS_KEY_FILE, rr_hostname,
 			    print_generic, opts, nopts);
 			if (n == 0)
 				fatal("no keys found.");

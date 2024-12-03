@@ -128,6 +128,10 @@ extern const struct sshkey_impl sshkey_dsa_cert_impl;
 extern const struct sshkey_impl sshkey_xmss_impl;
 extern const struct sshkey_impl sshkey_xmss_cert_impl;
 #endif
+#ifdef WITH_SPHINCSPLUS
+extern const struct sshkey_impl sshkey_sphincsplus_impl;
+extern const struct sshkey_impl sshkey_sphincsplus_cert_impl;
+#endif
 
 const struct sshkey_impl * const keyimpls[] = {
 	&sshkey_ed25519_impl,
@@ -166,6 +170,10 @@ const struct sshkey_impl * const keyimpls[] = {
 #ifdef WITH_XMSS
 	&sshkey_xmss_impl,
 	&sshkey_xmss_cert_impl,
+#endif
+#ifdef WITH_SPHINCSPLUS
+	&sshkey_sphincsplus_impl,
+	&sshkey_sphincsplus_cert_impl,
 #endif
 	NULL
 };
@@ -463,6 +471,8 @@ sshkey_type_plain(int type)
 		return KEY_ED25519_SK;
 	case KEY_XMSS_CERT:
 		return KEY_XMSS;
+	case KEY_SPHINCSPLUS_CERT:
+		return KEY_SPHINCSPLUS;
 	default:
 		return type;
 	}
@@ -487,6 +497,8 @@ sshkey_type_certified(int type)
 		return KEY_ED25519_SK_CERT;
 	case KEY_XMSS:
 		return KEY_XMSS_CERT;
+	case KEY_SPHINCSPLUS:
+		return KEY_SPHINCSPLUS_CERT;
 	default:
 		return -1;
 	}
@@ -3413,6 +3425,9 @@ sshkey_private_to_fileblob(struct sshkey *key, struct sshbuf *blob,
 #ifdef WITH_XMSS
 	case KEY_XMSS:
 #endif /* WITH_XMSS */
+#ifdef WITH_SPHINCSPLUS
+	case KEY_SPHINCSPLUS:
+#endif /* WITH_SPHINCSPLUS */
 #ifdef WITH_OPENSSL
 	case KEY_ECDSA_SK:
 #endif /* WITH_OPENSSL */
@@ -3689,6 +3704,7 @@ sshkey_parse_private_fileblob_type(struct sshbuf *blob, int type,
 
 	switch (type) {
 	case KEY_XMSS:
+	case KEY_SPHINCSPLUS:
 		/* No fallback for new-format-only keys */
 		return sshkey_parse_private2(blob, type, passphrase,
 		    keyp, commentp);

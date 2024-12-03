@@ -69,12 +69,13 @@ int ssh_port = SSH_DEFAULT_PORT;
 #define KT_XMSS		(1<<4)
 #define KT_ECDSA_SK	(1<<5)
 #define KT_ED25519_SK	(1<<6)
+#define KT_SPHINCSPLUS	(1<<7)
 
 #define KT_MIN		KT_DSA
-#define KT_MAX		KT_ED25519_SK
+#define KT_MAX		KT_SPHINCSPLUS
 
 int get_cert = 0;
-int get_keytypes = KT_RSA|KT_ECDSA|KT_ED25519|KT_ECDSA_SK|KT_ED25519_SK;
+int get_keytypes = KT_RSA|KT_ECDSA|KT_ED25519|KT_ECDSA_SK|KT_ED25519_SK|KT_SPHINCSPLUS;
 
 int hash_hosts = 0;		/* Hash hostname on output */
 
@@ -260,6 +261,11 @@ keygrab_ssh2(con *c)
 	case KT_XMSS:
 		myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = get_cert ?
 		    "ssh-xmss-cert-v01@openssh.com" : "ssh-xmss@openssh.com";
+		break;
+	case KT_SPHINCSPLUS:
+		myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = get_cert ?
+			"ssh-sphincsplus-cert-v01@openssh.com" :
+			"ssh-sphincsplus@openssh.com";
 		break;
 	case KT_ECDSA:
 		myproposal[PROPOSAL_SERVER_HOST_KEY_ALGS] = get_cert ?
@@ -759,6 +765,9 @@ main(int argc, char **argv)
 					break;
 				case KEY_XMSS:
 					get_keytypes |= KT_XMSS;
+					break;
+				case KEY_SPHINCSPLUS:
+					get_keytypes |= KT_SPHINCSPLUS;
 					break;
 				case KEY_ED25519_SK:
 					get_keytypes |= KT_ED25519_SK;
